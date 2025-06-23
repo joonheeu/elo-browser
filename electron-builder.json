@@ -92,7 +92,7 @@
   "npmRebuild": false,
   "publish": {
     "provider": "github",
-    "owner": "multiboxlabs",
+    "owner": "joonheeu",
     "releaseType": "prerelease"
   },
   "electronDist": "node_modules/electron/dist",
