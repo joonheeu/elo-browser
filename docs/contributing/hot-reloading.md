@@ -1,6 +1,6 @@
 # Hot Reloading
 
-This guide explains how to set up hot reloading for Flow Browser development.
+This guide explains how to set up hot reloading for Elo Browser development.
 
 ## Prerequisites
 
@@ -19,7 +19,8 @@ Hot reloading allows you to see your changes in real-time without manually resta
    bun run dev:server
    ```
 
-3. In another terminal, start Flow Browser:
+3. In another terminal, start Elo Browser:
+
    ```bash
    bun run start
    ```
@@ -28,11 +29,14 @@ Hot reloading allows you to see your changes in real-time without manually resta
 
 - If you encounter errors about port 5173 being in use, find and terminate the process using that port.
 - For macOS/Linux:
+
   ```bash
   lsof -i :5173
   kill -9 <PID>
   ```
+
 - For Windows:
+
   ```cmd
   netstat -ano | findstr :5173
   taskkill /PID <PID> /F

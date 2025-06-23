@@ -1,9 +1,9 @@
-# Flow Browser
+# Elo Browser
 
 A modern, tabbed web browser with Chrome extension support—built on Electron.
 
 <p align="center">
-  <img src="./build/icon.png" width="128" height="128" alt="Flow Browser Logo" />
+  <img src="./build/icon.png" width="128" height="128" alt="Elo Browser Logo" />
 </p>
 
 [![GPLv3 License](https://img.shields.io/badge/License-GPL%20v3-yellow.svg)](https://opensource.org/licenses/)
@@ -12,7 +12,7 @@ A modern, tabbed web browser with Chrome extension support—built on Electron.
 
 ## Overview
 
-Flow Browser is a lightweight, feature-rich web browser that combines the power of Chromium with a clean, modern interface. Built on Electron, it offers full support for Chrome extensions, making it a versatile alternative to mainstream browsers.
+Elo Browser is a lightweight, feature-rich web browser that combines the power of Chromium with a clean, modern interface. Built on Electron, it offers full support for Chrome extensions, making it a versatile alternative to mainstream browsers.
 
 ## Install (v0.8.1)
 
@@ -22,18 +22,18 @@ Flow Browser is a lightweight, feature-rich web browser that combines the power 
 >
 > If you just download it from your browser, it will be blocked by [Gatekeeper](https://disable-gatekeeper.github.io/), which says 'This application is damaged' and will not let you open it.
 
-### macOS:
+### macOS
 
 ```bash
 # Run this command in your terminal
 curl -LO https://github.com/MultiboxLabs/flow-browser/releases/download/v0.8.1/flow-browser-0.8.1.dmg && open .
 ```
 
-### Windows:
+### Windows
 
 Download [FlowSetup.exe](https://github.com/MultiboxLabs/flow-browser/releases/download/v0.8.1/flow-browser-0.8.1-setup.exe)
 
-### Linux:
+### Linux
 
 Choose the file you need and [download from GitHub Releases](https://github.com/MultiboxLabs/flow-browser/releases).
 
@@ -73,7 +73,7 @@ Choose the file you need and [download from GitHub Releases](https://github.com/
 
 ## Feedback / Feature Requests / Bugs
 
-https://flowbrowser.userjot.com/
+<https://flowbrowser.userjot.com/>
 
 ## Contributing
 
@@ -85,7 +85,7 @@ This project is licensed under the GNU General Public License v3.0 (GPL-3.0) - s
 
 ## Acknowledgements
 
-Some parts of Flow Browser are based on [electron-browser-shell](https://github.com/samuelmaddock/electron-browser-shell) by [Sam Maddock](https://github.com/samuelmaddock), with enhancements and modifications.
+Some parts of Elo Browser are based on [electron-browser-shell](https://github.com/samuelmaddock/electron-browser-shell) by [Sam Maddock](https://github.com/samuelmaddock), with enhancements and modifications.
 
 Design inspired by [Arc Browser](https://arc.net) and [Zen Browser](https://zen-browser.app/), which has a minimalistic design that is clean and simple.
 

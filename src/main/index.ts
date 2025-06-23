@@ -1,11 +1,11 @@
-import { app, BrowserWindow, Menu, MenuItem } from "electron";
 import { Browser } from "@/browser/browser";
+import { BrowserWindow, Menu, MenuItem, app } from "electron";
 import "@/ipc/main";
 import "@/settings/main";
-import { hasCompletedOnboarding } from "@/saving/onboarding";
-import { onboarding } from "@/onboarding/main";
-import { createInitialWindow } from "@/saving/tabs";
 import { TabbedBrowserWindow } from "@/browser/window";
+import { onboarding } from "@/onboarding/main";
+import { hasCompletedOnboarding } from "@/saving/onboarding";
+import { createInitialWindow } from "@/saving/tabs";
 import "@/modules/auto-update";
 import "@/modules/posthog";
 import "@/modules/content-blocker";
@@ -67,7 +67,7 @@ function printHeader() {
     console.log("\n".repeat(75));
   }
 
-  console.log("\x1b[34m%s\x1b[0m", "--- Flow Browser ---");
+  console.log("\x1b[34m%s\x1b[0m", "--- Elo Browser ---");
 
   if (app.isPackaged) {
     console.log("\x1b[32m%s\x1b[0m", `Production Build (${app.getVersion()})`);

@@ -1,10 +1,10 @@
+import { URL } from "url";
 import { addPdfResponseToCache } from "@/browser/utility/protocols/_protocols/flow";
+import { transformUserAgentHeader } from "@/browser/utility/user-agent";
 import { createBetterWebRequest } from "@/browser/utility/web-requests";
 import { generateID } from "@/modules/utils";
 import { getSettingValueById } from "@/saving/settings";
 import { Session } from "electron";
-import { URL } from "url";
-import { transformUserAgentHeader } from "@/browser/utility/user-agent";
 
 function setupUserAgentTransformer(session: Session) {
   const webRequest = createBetterWebRequest(session.webRequest, "user-agent-transformer");
@@ -82,7 +82,7 @@ function setupBetterPdfViewer(session: Session) {
       }
 
       const { pathname } = urlObject;
-      if (pathname && pathname.toLowerCase().endsWith(".pdf") && getSettingValueById("enableFlowPdfViewer") === true) {
+      if (pathname && pathname.toLowerCase().endsWith(".pdf") && getSettingValueById("enableEloPdfViewer") === true) {
         const response = await session.fetch(url).catch(() => null);
         if (!response) {
           return callback({});

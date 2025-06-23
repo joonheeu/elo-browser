@@ -1,7 +1,7 @@
 {
   "$schema": "https://raw.githubusercontent.com/electron-userland/electron-builder/refs/heads/master/packages/app-builder-lib/scheme.json",
-  "appId": "dev.iamevan.flow",
-  "productName": "Flow",
+  "appId": "dev.iamevan.elo",
+  "productName": "Elo",
   "directories": {
     "buildResources": "build"
   },
@@ -60,7 +60,7 @@
   ],
   "asarUnpack": ["assets/**", "node_modules/@img/**"],
   "win": {
-    "executableName": "flow",
+    "executableName": "elo",
     "verifyUpdateCodeSignature": false
   },
   "nsis": {

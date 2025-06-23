@@ -1,6 +1,6 @@
 {
-  "name": "flow-browser",
-  "productName": "Flow",
+  "name": "elo-browser",
+  "productName": "Elo",
   "version": "0.0.2",
   "description": "A modern privacy-focused browser with a minimalistic design.",
   "main": "./out/main/index.js",
@@ -16,7 +16,7 @@
     "typecheck:web": "tsc --noEmit -p tsconfig.web.json --composite false",
     "typecheck": "npm run typecheck:node && npm run typecheck:web",
     "start": "electron-vite preview",
-    "start:nightly": "bun run scripts/temp-change-name/command --name 'Flow Nightly' electron-vite preview",
+    "start:nightly": "bun run scripts/temp-change-name/command --name 'Elo Nightly' electron-vite preview",
     "dev": "electron-vite dev",
     "dev:watch": "electron-vite dev --watch",
     "build": "npm run typecheck && electron-vite build",
