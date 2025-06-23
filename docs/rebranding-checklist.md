@@ -88,9 +88,11 @@
 
 ### **우선순위 1: README 링크 수정**
 
-- [ ] **`README.md`**
-  - [ ] FlowSetup.exe 다운로드 링크 → EloSetup.exe로 수정
-  - [ ] `flow://games` 링크 설명 업데이트
+- [x] **`README.md`**
+  - [x] FlowSetup.exe 다운로드 링크 → EloSetup.exe로 수정
+  - [x] `flow://games` 링크 설명 업데이트
+  - [x] GitHub 저장소 링크 모두 수정 (MultiboxLabs → joonheeu)
+  - [x] Badge 링크 업데이트 (DeepWiki, CodeRabbit, Star History)
 
 ### **우선순위 2: 핵심 API 파일들**
 

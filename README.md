@@ -7,8 +7,8 @@ A modern, tabbed web browser with Chrome extension support—built on Electron.
 </p>
 
 [![GPLv3 License](https://img.shields.io/badge/License-GPL%20v3-yellow.svg)](https://opensource.org/licenses/)
-[![Ask DeepWiki](https://deepwiki.com/badge.svg)](https://deepwiki.com/multiboxlabs/flow-browser)
-![CodeRabbit Pull Request Reviews](https://img.shields.io/coderabbit/prs/github/MultiboxLabs/flow-browser?utm_source=oss&utm_medium=github&utm_campaign=MultiboxLabs%2Fflow-browser&labelColor=171717&color=FF570A&link=https%3A%2F%2Fcoderabbit.ai&label=CodeRabbit+Reviews)
+[![Ask DeepWiki](https://deepwiki.com/badge.svg)](https://deepwiki.com/joonheeu/elo-browser)
+![CodeRabbit Pull Request Reviews](https://img.shields.io/coderabbit/prs/github/joonheeu/elo-browser?utm_source=oss&utm_medium=github&utm_campaign=joonheeu%2Felo-browser&labelColor=171717&color=FF570A&link=https%3A%2F%2Fcoderabbit.ai&label=CodeRabbit+Reviews)
 
 ## Overview
 
@@ -26,16 +26,16 @@ Elo Browser is a lightweight, feature-rich web browser that combines the power o
 
 ```bash
 # Run this command in your terminal
-curl -LO https://github.com/MultiboxLabs/flow-browser/releases/download/v0.8.1/flow-browser-0.8.1.dmg && open .
+curl -LO https://github.com/joonheeu/elo-browser/releases/download/v0.8.1/elo-browser-0.8.1.dmg && open .
 ```
 
 ### Windows
 
-Download [FlowSetup.exe](https://github.com/MultiboxLabs/flow-browser/releases/download/v0.8.1/flow-browser-0.8.1-setup.exe)
+Download [EloSetup.exe](https://github.com/joonheeu/elo-browser/releases/download/v0.8.1/elo-browser-0.8.1-setup.exe)
 
 ### Linux
 
-Choose the file you need and [download from GitHub Releases](https://github.com/MultiboxLabs/flow-browser/releases).
+Choose the file you need and [download from GitHub Releases](https://github.com/joonheeu/elo-browser/releases).
 
 ## Screenshots
 
@@ -54,7 +54,7 @@ Choose the file you need and [download from GitHub Releases](https://github.com/
 - **Good Security**: Asks before opening external applications.
 - **Simple Onboarding**: A simple onboarding process that allows you to quickly get started.
 - **Wide Customization**: Custom icons, new page mode, and more.
-- **Offline Games**: A collection of offline games to play when you have nothing to do. (flow://games)
+- **Offline Games**: A collection of offline games to play when you have nothing to do. (elo://games)
 - **Extensions**: Allow you to install chrome extensions from the Chrome Web Store.
 - **Persist Tabs**: Allow you to persist tabs between restarts.
 - **Native Adblocker**: A native adblocker that blocks ads and trackers.
@@ -91,4 +91,4 @@ Design inspired by [Arc Browser](https://arc.net) and [Zen Browser](https://zen-
 
 ## Star History
 
-[![Star History Chart](https://api.star-history.com/svg?repos=multiboxlabs/flow-browser&type=Date)](https://www.star-history.com/#multiboxlabs/flow-browser&Date)
+[![Star History Chart](https://api.star-history.com/svg?repos=joonheeu/elo-browser&type=Date)](https://www.star-history.com/#joonheeu/elo-browser&Date)
