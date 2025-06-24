@@ -248,4 +248,4 @@ Our privacy-first approach means:
 
 ---
 
-*Thank you for your interest in Elo Browser! Together, we're elevating the browsing experience for everyone.* 🚀
+_Thank you for your interest in Elo Browser! Together, we're elevating the browsing experience for everyone._ 🚀

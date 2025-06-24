@@ -49,9 +49,9 @@ type Permission = "all" | "app" | "browser" | "session" | "settings";
 
 function hasPermission(permission: Permission) {
   const isEloProtocol = isProtocol("flow:");
-const isEloInternalProtocol = isProtocol("flow-internal:");
+  const isEloInternalProtocol = isProtocol("flow-internal:");
 
-const isInternalProtocols = isEloInternalProtocol || isEloProtocol;
+  const isInternalProtocols = isEloInternalProtocol || isEloProtocol;
 
   // Browser UI
   const isMainUI = isLocation("flow-internal:", "main-ui");

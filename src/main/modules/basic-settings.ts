@@ -208,10 +208,10 @@ export const BasicSettings: BasicSetting[] = [
     ]
   },
 
-        // [EXPERIMENTAL] Enable Elo PDF Viewer
-      {
-        id: "enableEloPdfViewer",
-        name: "Enable Elo PDF Viewer",
+  // [EXPERIMENTAL] Enable Elo PDF Viewer
+  {
+    id: "enableEloPdfViewer",
+    name: "Enable Elo PDF Viewer",
     showName: true,
     type: "boolean",
     defaultValue: false
@@ -273,8 +273,8 @@ export const BasicSettingCards: BasicSettingCard[] = [
   // Experimental Settings Card
   {
     title: "Experimental Settings",
-          subtitle: "Experimental settings for Elo",
-      settings: ["enableEloPdfViewer"]
+    subtitle: "Experimental settings for Elo",
+    settings: ["enableEloPdfViewer"]
   },
 
   // Advanced Settings Card
