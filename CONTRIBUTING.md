@@ -25,8 +25,8 @@
 
 ```bash
 # Clone the repository
-git clone https://github.com/MultiboxLabs/flow-browser.git
-cd flow-browser
+git clone https://github.com/MultiboxLabs/elo-browser.git
+cd elo-browser
 
 # Install dependencies
 bun install

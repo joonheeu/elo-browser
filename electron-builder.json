@@ -72,7 +72,8 @@
   "mac": {
     "category": "public.app-category.productivity",
     "entitlementsInherit": "build/entitlements.mac.plist",
-    "notarize": false
+    "notarize": false,
+    "executableName": "Elo"
   },
   "dmg": {
     "artifactName": "${name}-${version}-${arch}.${ext}"
@@ -81,7 +82,8 @@
     "target": ["AppImage", "deb", "flatpak"],
     "category": "Network;WebBrowser;",
     "executableArgs": ["--ozone-platform-hint=auto"],
-    "icon": "build/icon.png"
+    "icon": "build/icon.png",
+    "executableName": "elo"
   },
   "appImage": {
     "artifactName": "${name}-${version}-${arch}.${ext}"
