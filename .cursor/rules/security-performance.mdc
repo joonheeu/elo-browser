@@ -1,0 +1,537 @@
+---
+description: 
+globs: 
+alwaysApply: false
+---
+# Elo Browser 보안 및 성능 규칙
+
+이 규칙은 Elo Browser의 보안 강화와 성능 최적화를 위한 구체적인 가이드라인을 제공합니다.
+
+## 🔒 보안 규칙
+
+### Electron 보안 설정
+
+#### ✅ 올바른 BrowserWindow 설정
+```typescript
+// ✅ 보안이 강화된 창 생성
+const createSecureWindow = () => {
+  return new BrowserWindow({
+    webPreferences: {
+      nodeIntegration: false,           // Node.js 통합 비활성화
+      contextIsolation: true,           // 컨텍스트 격리 활성화
+      sandbox: true,                    // 샌드박스 활성화
+      webSecurity: true,                // 웹 보안 활성화
+      allowRunningInsecureContent: false, // 비보안 콘텐츠 차단
+      experimentalFeatures: false,       // 실험적 기능 비활성화
+      preload: path.join(__dirname, 'preload.js')
+    }
+  });
+};
+```
+
+#### ❌ 금지된 설정
+```typescript
+// ❌ 보안 위험이 있는 설정
+const dangerousWindow = new BrowserWindow({
+  webPreferences: {
+    nodeIntegration: true,              // ❌ 보안 위험
+    contextIsolation: false,            // ❌ 보안 위험
+    webSecurity: false,                 // ❌ 보안 위험
+    allowRunningInsecureContent: true   // ❌ 보안 위험
+  }
+});
+```
+
+### Content Security Policy (CSP)
+
+#### ✅ 강화된 CSP 설정
+```typescript
+// ✅ 엄격한 CSP 정책
+const CSP_POLICY = {
+  "default-src": ["'self'"],
+  "script-src": ["'self'", "'wasm-unsafe-eval'"],
+  "style-src": ["'self'", "'unsafe-inline'"],
+  "img-src": ["'self'", "data:", "https:"],
+  "font-src": ["'self'", "data:"],
+  "connect-src": ["'self'", "https:"],
+  "frame-src": ["'none'"],
+  "object-src": ["'none'"],
+  "base-uri": ["'self'"],
+  "form-action": ["'self'"]
+};
+```
+
+### IPC 보안
+
+#### ✅ 안전한 IPC 통신
+```typescript
+// preload.js - ✅ 안전한 API 노출
+import { contextBridge, ipcRenderer } from 'electron';
+
+contextBridge.exposeInMainWorld('elo', {
+  // ✅ 타입 안전하고 검증된 API
+  browser: {
+    createTab: (url: string) => {
+      // URL 검증
+      if (!isValidUrl(url)) {
+        throw new Error('Invalid URL');
+      }
+      return ipcRenderer.invoke('browser:create-tab', url);
+    },
+    
+    closeTab: (tabId: number) => {
+      // ID 검증
+      if (!Number.isInteger(tabId) || tabId < 0) {
+        throw new Error('Invalid tab ID');
+      }
+      return ipcRenderer.invoke('browser:close-tab', tabId);
+    }
+  }
+});
+
+// ✅ URL 검증 함수
+function isValidUrl(url: string): boolean {
+  try {
+    const parsed = new URL(url);
+    return ['http:', 'https:', 'file:', 'flow:', 'flow-internal:'].includes(parsed.protocol);
+  } catch {
+    return false;
+  }
+}
+```
+
+#### ❌ 위험한 IPC 패턴
+```typescript
+// ❌ 검증 없는 직접 노출
+contextBridge.exposeInMainWorld('dangerous', {
+  executeCommand: (cmd: string) => ipcRenderer.invoke('exec', cmd), // ❌ 위험
+  readFile: (path: string) => ipcRenderer.invoke('fs:read', path),  // ❌ 위험
+  eval: (code: string) => ipcRenderer.invoke('eval', code)          // ❌ 매우 위험
+});
+```
+
+### 데이터 검증 및 새니타이제이션
+
+#### ✅ 입력 검증
+```typescript
+// ✅ 사용자 입력 검증
+class InputValidator {
+  static validateTabUrl(url: string): boolean {
+    if (!url || typeof url !== 'string') return false;
+    if (url.length > 2048) return false; // URL 길이 제한
+    
+    try {
+      const parsed = new URL(url);
+      const allowedProtocols = ['http:', 'https:', 'file:', 'flow:', 'flow-internal:'];
+      return allowedProtocols.includes(parsed.protocol);
+    } catch {
+      return false;
+    }
+  }
+
+  static sanitizeSearchQuery(query: string): string {
+    if (!query || typeof query !== 'string') return '';
+    
+    // HTML 태그 제거
+    const sanitized = query.replace(/<[^>]*>/g, '');
+    
+    // 길이 제한
+    return sanitized.slice(0, 500);
+  }
+
+  static validateExtensionId(id: string): boolean {
+    // Chrome 확장 ID 형식 검증 (32자 소문자 알파벳)
+    return /^[a-z]{32}$/.test(id);
+  }
+}
+```
+
+## ⚡ 성능 최적화 규칙
+
+### 메모리 관리
+
+#### ✅ 효율적인 탭 관리
+```typescript
+// ✅ 탭 서스펜션 시스템
+class TabSuspensionManager {
+  private suspendedTabs = new Map<number, TabState>();
+  private readonly SUSPENSION_DELAY = 5 * 60 * 1000; // 5분
+
+  async suspendInactiveTabs(): Promise<void> {
+    const tabs = await this.getAllTabs();
+    
+    for (const tab of tabs) {
+      if (this.shouldSuspend(tab)) {
+        await this.suspendTab(tab.id);
+      }
+    }
+  }
+
+  private shouldSuspend(tab: Tab): boolean {
+    return (
+      !tab.isVisible &&
+      !tab.isPlayingAudio &&
+      !tab.isLoading &&
+      Date.now() - tab.lastActiveTime > this.SUSPENSION_DELAY
+    );
+  }
+
+  private async suspendTab(tabId: number): Promise<void> {
+    const tab = await this.getTab(tabId);
+    if (!tab) return;
+
+    // 탭 상태 저장
+    this.suspendedTabs.set(tabId, {
+      url: tab.url,
+      title: tab.title,
+      scrollPosition: await tab.getScrollPosition(),
+      formData: await tab.getFormData()
+    });
+
+    // 메모리에서 해제
+    await tab.discard();
+  }
+}
+```
+
+#### ✅ 메모리 누수 방지
+```typescript
+// ✅ 이벤트 리스너 정리
+class ComponentWithCleanup extends React.Component {
+  private eventListeners: Array<() => void> = [];
+
+  componentDidMount() {
+    const handleResize = () => this.handleResize();
+    const handleScroll = () => this.handleScroll();
+
+    window.addEventListener('resize', handleResize);
+    window.addEventListener('scroll', handleScroll);
+
+    // 정리 함수 저장
+    this.eventListeners.push(
+      () => window.removeEventListener('resize', handleResize),
+      () => window.removeEventListener('scroll', handleScroll)
+    );
+  }
+
+  componentWillUnmount() {
+    // 모든 이벤트 리스너 정리
+    this.eventListeners.forEach(cleanup => cleanup());
+    this.eventListeners = [];
+  }
+}
+
+// ✅ 훅에서의 정리
+const useWindowSize = () => {
+  const [size, setSize] = useState({ width: 0, height: 0 });
+
+  useEffect(() => {
+    const handleResize = () => {
+      setSize({ width: window.innerWidth, height: window.innerHeight });
+    };
+
+    window.addEventListener('resize', handleResize);
+    handleResize(); // 초기값 설정
+
+    return () => window.removeEventListener('resize', handleResize);
+  }, []);
+
+  return size;
+};
+```
+
+### 렌더링 최적화
+
+#### ✅ React 성능 최적화
+```typescript
+// ✅ 메모이제이션 활용
+const TabList = React.memo(({ tabs, onTabSelect }: TabListProps) => {
+  const memoizedTabs = useMemo(() => 
+    tabs.map(tab => ({
+      ...tab,
+      favicon: tab.favicon || '/default-favicon.png'
+    }))
+  , [tabs]);
+
+  const handleTabSelect = useCallback((tabId: number) => {
+    onTabSelect(tabId);
+  }, [onTabSelect]);
+
+  return (
+    <div className="tab-list">
+      {memoizedTabs.map(tab => (
+        <TabItem
+          key={tab.id}
+          tab={tab}
+          onSelect={handleTabSelect}
+        />
+      ))}
+    </div>
+  );
+});
+
+// ✅ 가상화된 리스트 (많은 항목 처리시)
+const VirtualizedTabList = ({ tabs }: { tabs: Tab[] }) => {
+  const [visibleRange, setVisibleRange] = useState({ start: 0, end: 20 });
+  
+  const visibleTabs = useMemo(() => 
+    tabs.slice(visibleRange.start, visibleRange.end)
+  , [tabs, visibleRange]);
+
+  return (
+    <VirtualList
+      height={400}
+      itemCount={tabs.length}
+      itemSize={32}
+      onRangeChange={setVisibleRange}
+    >
+      {visibleTabs.map(tab => (
+        <TabItem key={tab.id} tab={tab} />
+      ))}
+    </VirtualList>
+  );
+};
+```
+
+#### ✅ 지연 로딩
+```typescript
+// ✅ 컴포넌트 지연 로딩
+const LazySettingsPanel = lazy(() => 
+  import('./SettingsPanel').then(module => ({
+    default: module.SettingsPanel
+  }))
+);
+
+// ✅ 이미지 지연 로딩
+const LazyImage: React.FC<{ src: string; alt: string }> = ({ src, alt }) => {
+  const [isLoaded, setIsLoaded] = useState(false);
+  const [isInView, setIsInView] = useState(false);
+  const imgRef = useRef<HTMLImageElement>(null);
+
+  useEffect(() => {
+    const observer = new IntersectionObserver(
+      ([entry]) => {
+        if (entry.isIntersecting) {
+          setIsInView(true);
+          observer.disconnect();
+        }
+      },
+      { threshold: 0.1 }
+    );
+
+    if (imgRef.current) {
+      observer.observe(imgRef.current);
+    }
+
+    return () => observer.disconnect();
+  }, []);
+
+  return (
+    <img
+      ref={imgRef}
+      src={isInView ? src : ''}
+      alt={alt}
+      onLoad={() => setIsLoaded(true)}
+      className={`transition-opacity ${isLoaded ? 'opacity-100' : 'opacity-0'}`}
+      loading="lazy"
+    />
+  );
+};
+```
+
+### 네트워크 최적화
+
+#### ✅ 효율적인 데이터 페칭
+```typescript
+// ✅ 요청 중복 제거
+class RequestCache {
+  private cache = new Map<string, Promise<any>>();
+  private readonly TTL = 5 * 60 * 1000; // 5분
+
+  async fetch<T>(url: string, options?: RequestInit): Promise<T> {
+    const cacheKey = `${url}:${JSON.stringify(options)}`;
+    
+    // 캐시된 요청이 있으면 재사용
+    if (this.cache.has(cacheKey)) {
+      return this.cache.get(cacheKey);
+    }
+
+    // 새 요청 생성
+    const request = fetch(url, options)
+      .then(response => response.json())
+      .catch(error => {
+        this.cache.delete(cacheKey); // 실패시 캐시에서 제거
+        throw error;
+      });
+
+    this.cache.set(cacheKey, request);
+
+    // TTL 후 캐시에서 제거
+    setTimeout(() => {
+      this.cache.delete(cacheKey);
+    }, this.TTL);
+
+    return request;
+  }
+}
+
+// ✅ 배치 요청
+class BatchRequestManager {
+  private pendingRequests: Array<{
+    id: string;
+    resolve: (value: any) => void;
+    reject: (error: any) => void;
+  }> = [];
+  
+  private batchTimeout: NodeJS.Timeout | null = null;
+
+  async request(id: string): Promise<any> {
+    return new Promise((resolve, reject) => {
+      this.pendingRequests.push({ id, resolve, reject });
+      
+      if (!this.batchTimeout) {
+        this.batchTimeout = setTimeout(() => {
+          this.processBatch();
+        }, 50); // 50ms 후 배치 처리
+      }
+    });
+  }
+
+  private async processBatch(): Promise<void> {
+    const requests = [...this.pendingRequests];
+    this.pendingRequests = [];
+    this.batchTimeout = null;
+
+    try {
+      const ids = requests.map(req => req.id);
+      const results = await this.fetchBatch(ids);
+      
+      requests.forEach((req, index) => {
+        req.resolve(results[index]);
+      });
+    } catch (error) {
+      requests.forEach(req => req.reject(error));
+    }
+  }
+
+  private async fetchBatch(ids: string[]): Promise<any[]> {
+    const response = await fetch('/api/batch', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ ids })
+    });
+    return response.json();
+  }
+}
+```
+
+## 📊 성능 모니터링
+
+### ✅ 성능 메트릭 수집
+```typescript
+// ✅ 성능 모니터링 시스템
+class PerformanceMonitor {
+  private metrics: PerformanceMetric[] = [];
+  private observer: PerformanceObserver;
+
+  constructor() {
+    this.observer = new PerformanceObserver((list) => {
+      for (const entry of list.getEntries()) {
+        this.recordMetric(entry);
+      }
+    });
+
+    this.observer.observe({ entryTypes: ['measure', 'navigation', 'paint'] });
+  }
+
+  startMeasure(name: string): void {
+    performance.mark(`${name}-start`);
+  }
+
+  endMeasure(name: string): void {
+    performance.mark(`${name}-end`);
+    performance.measure(name, `${name}-start`, `${name}-end`);
+  }
+
+  private recordMetric(entry: PerformanceEntry): void {
+    this.metrics.push({
+      name: entry.name,
+      duration: entry.duration || 0,
+      timestamp: Date.now()
+    });
+
+    // 메트릭이 너무 많이 쌓이면 정리
+    if (this.metrics.length > 1000) {
+      this.metrics = this.metrics.slice(-500);
+    }
+  }
+
+  getMetrics(): PerformanceMetric[] {
+    return [...this.metrics];
+  }
+
+  // 메모리 사용량 모니터링
+  getMemoryUsage(): MemoryInfo | null {
+    return (performance as any).memory || null;
+  }
+}
+
+// 사용 예시
+const monitor = new PerformanceMonitor();
+
+// 탭 생성 시간 측정
+monitor.startMeasure('tab-creation');
+await createNewTab(url);
+monitor.endMeasure('tab-creation');
+```
+
+## 🚨 보안 체크리스트
+
+### 코드 리뷰시 확인사항
+- [ ] **Node.js 통합 비활성화**: `nodeIntegration: false`
+- [ ] **컨텍스트 격리 활성화**: `contextIsolation: true`
+- [ ] **샌드박스 활성화**: `sandbox: true`
+- [ ] **입력 검증**: 모든 사용자 입력 검증
+- [ ] **출력 인코딩**: XSS 방지를 위한 적절한 인코딩
+- [ ] **CSP 적용**: 엄격한 Content Security Policy
+- [ ] **HTTPS 강제**: 모든 외부 통신 HTTPS
+- [ ] **권한 최소화**: 필요한 권한만 요청
+
+### 성능 체크리스트
+- [ ] **메모리 누수 방지**: 이벤트 리스너 정리
+- [ ] **지연 로딩**: 필요한 시점에만 로드
+- [ ] **메모이제이션**: 불필요한 재계산 방지
+- [ ] **가상화**: 대량 데이터 효율적 렌더링
+- [ ] **배치 처리**: 네트워크 요청 최적화
+- [ ] **캐싱**: 적절한 캐싱 전략
+- [ ] **성능 모니터링**: 메트릭 수집 및 분석
+
+## 🔧 개발 도구 활용
+
+### ✅ 보안 테스트 도구
+```bash
+# npm audit으로 취약점 검사
+bun audit
+
+# ESLint 보안 규칙
+npx eslint --ext .ts,.tsx src/ --config .eslintrc.security.js
+
+# 타입 체크
+bun run typecheck
+```
+
+### ✅ 성능 테스트 도구
+```bash
+# 번들 크기 분석
+npx webpack-bundle-analyzer dist/
+
+# 메모리 프로파일링
+node --inspect-brk=0.0.0.0:9229 dist/main.js
+
+# 성능 벤치마크
+bun run benchmark
+```
+
+---
+
+**이 규칙들을 준수하여 안전하고 고성능의 Elo Browser를 개발하세요.**

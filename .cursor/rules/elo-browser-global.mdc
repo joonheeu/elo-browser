@@ -1,0 +1,294 @@
+---
+description: 
+globs: 
+alwaysApply: false
+---
+# Elo Browser 전역 개발 규칙
+
+이 규칙은 Elo Browser 프로젝트의 전반적인 개발 표준과 리브랜딩 가이드라인을 정의합니다.
+
+## 🎯 프로젝트 개요
+
+**Elo Browser**는 Flow Browser에서 리브랜딩된 오픈소스 웹 브라우저입니다. "Elevate your browsing experience"를 모토로 하며, 속도, 보안, 개인화를 핵심 가치로 합니다.
+
+### 주요 문서 참조
+- 프로젝트 기획: [docs/elo-browser-rebranding-plan.md](mdc:docs/elo-browser-rebranding-plan.md)
+- 기술 사양: [docs/technical-specifications.md](mdc:docs/technical-specifications.md)
+- 진행 상황: [docs/rebranding-checklist.md](mdc:docs/rebranding-checklist.md)
+- 메인 설정: [package.json](mdc:package.json), [electron-builder.json](mdc:electron-builder.json)
+
+## 📋 네이밍 컨벤션
+
+### ✅ 올바른 네이밍 (사용해야 할 것들)
+
+#### **브랜드 이름**
+- ✅ `Elo Browser` (제품명)
+- ✅ `Elo` (단독 사용시)
+- ✅ `elo-browser` (패키지명, URL, 파일명)
+
+#### **API 인터페이스**
+- ✅ `EloXXXAPI` 형식 (예: `EloBrowserAPI`, `EloTabsAPI`)
+- ✅ `elo` 전역 객체 (`window.elo`)
+
+#### **함수명**
+- ✅ `registerEloProtocol()` 
+- ✅ `registerEloExternalProtocol()`
+- ✅ `registerEloInternalProtocol()`
+- ✅ `setupCorsBypassForEloProtocols()`
+
+#### **변수명**
+- ✅ `isEloProtocol`
+- ✅ `isEloInternalProtocol`
+
+### ❌ 금지된 네이밍 (사용하면 안 되는 것들)
+
+#### **구 브랜드 이름**
+- ❌ `Flow Browser` 
+- ❌ `Flow`
+- ❌ `flow-browser`
+
+#### **구 API 인터페이스**
+- ❌ `FlowXXXAPI` 형식
+- ❌ `flow` 전역 객체
+
+## 📁 폴더 구조 및 Import 경로
+
+### ✅ 올바른 구조
+```
+src/
+├── main/                 # Electron 메인 프로세스
+├── preload/             # 프리로드 스크립트
+├── renderer/            # React 렌더러
+└── shared/
+    └── elo/            # ✅ API 인터페이스 (리브랜딩 완료)
+```
+
+### ✅ 올바른 Import 경로
+```typescript
+// ✅ 올바른 import
+import type { EloBrowserAPI } from "~/elo/interfaces/browser/browser";
+import type { EloTabsAPI } from "~/elo/interfaces/browser/tabs";
+import { EloAPI } from "~/elo/flow";
+```
+
+### ❌ 금지된 Import 경로
+```typescript
+// ❌ 구 경로 사용 금지
+import type { FlowBrowserAPI } from "~/flow/interfaces/browser/browser";
+import { FlowAPI } from "~/flow/flow";
+```
+
+## 🔧 기술 스택 및 도구
+
+### 핵심 기술
+- **Runtime**: Electron 36.5.0+
+- **Frontend**: React 18.3+ + TypeScript 5.6+
+- **Styling**: Tailwind CSS 3.4+
+- **Build**: Vite + Electron Builder
+- **Package Manager**: Bun 1.1+
+
+### 개발 도구
+- **Linting**: ESLint 9.14+
+- **Testing**: Vitest 2.1+
+- **Type Checking**: TypeScript strict mode
+
+## 🎨 UI/UX 가이드라인
+
+### 디자인 원칙
+1. **미니멀리즘**: 깔끔하고 정돈된 인터페이스
+2. **일관성**: 통일된 디자인 언어
+3. **접근성**: WCAG 2.1 AA 준수
+4. **반응형**: 다양한 화면 크기 지원
+
+### 색상 및 테마
+- **다크/라이트 모드** 지원 필수
+- **브랜드 색상** 일관성 유지
+- **고대비** 접근성 고려
+
+### 컴포넌트 사용
+- **Radix UI** 기반 접근성 컴포넌트 우선 사용
+- **Tailwind CSS** 유틸리티 클래스 활용
+- **커스텀 컴포넌트**는 [src/renderer/src/components/ui/](mdc:src/renderer/src/components/ui) 참조
+
+## 🔒 보안 가이드라인
+
+### 필수 보안 원칙
+1. **프로세스 격리**: 샌드박스 환경 유지
+2. **CSP 적용**: 엄격한 Content Security Policy
+3. **권한 최소화**: 필요한 권한만 요청
+4. **입력 검증**: 모든 사용자 입력 검증
+
+### 프로토콜 보안
+- **프로토콜 스킴 유지**: `flow://`, `flow-external://`, `flow-internal://` (호환성)
+- **HTTPS 강제**: 모든 외부 통신은 HTTPS
+- **인증서 검증**: SSL/TLS 인증서 강제 검증
+
+## ⚡ 성능 최적화
+
+### 성능 목표
+- **시작 시간**: 3초 이내 (Chrome 대비 26% 향상)
+- **메모리 사용**: 탭당 50MB 이하
+- **페이지 로딩**: First Contentful Paint 1초 이내
+
+### 최적화 기법
+1. **코드 분할**: 동적 import 활용
+2. **지연 로딩**: 필요시에만 리소스 로드
+3. **메모리 관리**: 탭 서스펜션 구현
+4. **캐싱**: 적절한 캐싱 전략 적용
+
+## 🧪 테스트 전략
+
+### 테스트 레벨
+1. **Unit Tests**: 컴포넌트/함수 단위
+2. **Integration Tests**: 모듈 간 상호작용
+3. **E2E Tests**: 사용자 시나리오
+
+### 테스트 명령어
+```bash
+bun run test          # 단위 테스트
+bun run test:e2e      # E2E 테스트
+bun run typecheck     # 타입 체크
+```
+
+### 테스트 커버리지
+- **목표**: 85% 이상
+- **필수**: 핵심 비즈니스 로직 100%
+
+## 📦 빌드 및 배포
+
+### 빌드 명령어
+```bash
+bun run dev           # 개발 서버
+bun run build         # 프로덕션 빌드
+bun run build:mac     # macOS 빌드
+bun run build:win     # Windows 빌드
+bun run build:linux   # Linux 빌드
+```
+
+### 배포 플랫폼
+- **GitHub Releases**: 자동 배포
+- **Auto-Update**: Electron-updater 사용
+- **Multi-Platform**: Windows, macOS, Linux 지원
+
+## 📝 코드 스타일
+
+### TypeScript 규칙
+```typescript
+// ✅ 올바른 타입 정의
+interface EloConfig {
+  theme: 'light' | 'dark' | 'auto';
+  privacy: PrivacyLevel;
+  performance: PerformanceSettings;
+}
+
+// ✅ 올바른 함수 정의
+export async function createEloTab(url?: string): Promise<Tab> {
+  // 구현
+}
+```
+
+### 파일 네이밍
+- **컴포넌트**: PascalCase (예: `BrowserContent.tsx`)
+- **유틸리티**: camelCase (예: `tabManager.ts`)
+- **타입 파일**: camelCase (예: `browserTypes.ts`)
+
+### Import 순서
+```typescript
+// 1. 외부 라이브러리
+import React from 'react';
+import { BrowserWindow } from 'electron';
+
+// 2. 내부 모듈 (절대 경로)
+import { EloBrowserAPI } from '~/elo/interfaces/browser/browser';
+
+// 3. 상대 경로
+import './component.css';
+```
+
+## 🔄 Git 워크플로우
+
+### 브랜치 전략
+- **main**: 안정 버전
+- **develop**: 개발 버전
+- **feature/***: 기능 개발
+- **hotfix/***: 긴급 수정
+
+### 커밋 메시지
+```
+feat(rebrand): add new Elo branding to UI components
+fix(security): resolve CSP violation in extension loader
+docs(api): update EloBrowserAPI documentation
+refactor(performance): optimize tab memory usage
+```
+
+### PR 체크리스트
+- [ ] 빌드 성공 (`bun run build`)
+- [ ] 테스트 통과 (`bun run test`)
+- [ ] 타입 체크 (`bun run typecheck`)
+- [ ] 린팅 통과 (`bun run lint`)
+- [ ] 문서 업데이트 (필요시)
+
+## 🚨 중요 금지사항
+
+### ❌ 절대 하지 말아야 할 것들
+1. **구 브랜드명 사용**: Flow, FlowAPI 등 사용 금지
+2. **프로토콜 변경**: `flow://` 스킴 변경 금지 (호환성)
+3. **보안 약화**: 샌드박스 비활성화, CSP 완화 금지
+4. **타입 안전성 무시**: `any` 타입 남용 금지
+5. **성능 저하**: 불필요한 리소스 로딩 금지
+
+### ⚠️ 주의사항
+1. **하위 호환성**: 기존 사용자 데이터 보호
+2. **크로스 플랫폼**: 모든 지원 OS에서 테스트
+3. **접근성**: 키보드 네비게이션, 스크린 리더 지원
+4. **국제화**: 다국어 지원 고려
+
+## 📊 성능 모니터링
+
+### 핵심 메트릭
+- **시작 시간**: Cold/Warm start 측정
+- **메모리 사용량**: 탭별, 확장별 모니터링
+- **CPU 사용률**: 백그라운드 프로세스 최적화
+- **네트워크 사용량**: 불필요한 요청 최소화
+
+### 모니터링 도구
+- **Electron DevTools**: 개발 중 성능 분석
+- **Memory Profiler**: 메모리 누수 감지
+- **Performance Timeline**: 렌더링 성능 측정
+
+## 🎯 품질 보증
+
+### 코드 품질 기준
+- **복잡도**: 함수당 최대 15줄
+- **중복**: DRY 원칙 준수
+- **가독성**: 명확한 변수/함수명 사용
+- **문서화**: 복잡한 로직 주석 필수
+
+### 리뷰 기준
+1. **기능성**: 요구사항 충족
+2. **안정성**: 에러 처리 적절성
+3. **성능**: 성능 영향 최소화
+4. **보안**: 보안 취약점 없음
+5. **유지보수성**: 코드 가독성
+
+## 📚 참고 자료
+
+### 프로젝트 문서
+- [리브랜딩 기획서](mdc:docs/elo-browser-rebranding-plan.md)
+- [기술 사양서](mdc:docs/technical-specifications.md)
+- [진행 체크리스트](mdc:docs/rebranding-checklist.md)
+
+### 기술 문서
+- [Electron 공식 문서](mdc:https:/www.electronjs.org/docs)
+- [React 공식 문서](mdc:https:/react.dev)
+- [TypeScript 핸드북](mdc:https:/www.typescriptlang.org/docs)
+
+### 디자인 가이드
+- [Radix UI 컴포넌트](mdc:https:/www.radix-ui.com)
+- [Tailwind CSS 문서](mdc:https:/tailwindcss.com/docs)
+- [WCAG 2.1 가이드라인](mdc:https:/www.w3.org/WAI/WCAG21/quickref)
+
+---
+
+**이 규칙을 따라 개발하면 일관되고 고품질의 Elo Browser를 만들 수 있습니다.**  
+**문의사항이 있다면 [docs/README.md](mdc:docs/README.md)를 참조하거나 GitHub Issues를 활용하세요.**
