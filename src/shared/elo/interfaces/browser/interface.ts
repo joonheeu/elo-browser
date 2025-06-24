@@ -1,7 +1,7 @@
-import { IPCListener, PageBounds, WindowState } from "~/flow/types";
+import { IPCListener, PageBounds, WindowState } from "~/elo/types";
 
 // API //
-export interface FlowInterfaceAPI {
+export interface EloInterfaceAPI {
   /**
    * Sets the position of the window button
    * This can only be called from the Browser UI

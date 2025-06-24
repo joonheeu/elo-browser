@@ -4,7 +4,7 @@ export interface ExternalAppPermission {
 }
 
 // API //
-export interface FlowOpenExternalAPI {
+export interface EloOpenExternalAPI {
   /**
    * Gets the list of always open external applications
    */

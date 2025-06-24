@@ -1,8 +1,8 @@
-import type { IPCListener } from "~/flow/types";
+import type { IPCListener } from "~/elo/types";
 import type { UpdateStatus } from "~/types/updates";
 
 // API //
-export interface FlowUpdatesAPI {
+export interface EloUpdatesAPI {
   /**
    * Checks if automatic updates are supported on the current platform
    * @returns Promise resolving to a boolean indicating support status

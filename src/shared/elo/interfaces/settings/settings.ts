@@ -1,8 +1,8 @@
-import { IPCListener } from "~/flow/types";
+import { IPCListener } from "~/elo/types";
 import type { BasicSetting, BasicSettingCard } from "~/types/settings";
 
 // API //
-export interface FlowSettingsAPI {
+export interface EloSettingsAPI {
   /**
    * Gets the value of a setting
    */

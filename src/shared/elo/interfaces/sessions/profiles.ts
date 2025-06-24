@@ -4,7 +4,7 @@ export type Profile = {
 };
 
 // API //
-export interface FlowProfilesAPI {
+export interface EloProfilesAPI {
   /**
    * Gets the profiles
    */

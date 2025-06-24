@@ -35,7 +35,7 @@ function setupUserAgentTransformer(session: Session) {
   });
 }
 
-function setupCorsBypassForFlowProtocols(session: Session) {
+function setupCorsBypassForEloProtocols(session: Session) {
   const webRequest = createBetterWebRequest(session.webRequest, "bypass-cors");
 
   const WHITELISTED_PROTOCOLS = ["flow:", "flow-internal:"];
@@ -122,7 +122,7 @@ export function setupInterceptRules(session: Session) {
   setupUserAgentTransformer(session);
 
   // Bypass CORS for flow and flow-internal protocols
-  setupCorsBypassForFlowProtocols(session);
+  setupCorsBypassForEloProtocols(session);
 
   // Setup redirects required for the better PDF viewer
   setupBetterPdfViewer(session);

@@ -9,32 +9,32 @@ import { injectBrowserAction } from "electron-chrome-extensions/browser-action";
 import type { ProfileData } from "@/sessions/profiles";
 import type { SpaceData } from "@/sessions/spaces";
 
+import type { WindowState } from "~/elo/types";
 // SHARED TYPES //
 import type { SharedExtensionData } from "~/types/extensions";
 import type { WindowTabsData } from "~/types/tabs";
 import type { UpdateStatus } from "~/types/updates";
-import type { WindowState } from "~/flow/types";
 
+import type { EloActionsAPI } from "~/elo/interfaces/app/actions";
+import type { EloAppAPI } from "~/elo/interfaces/app/app";
+import type { EloExtensionsAPI } from "~/elo/interfaces/app/extensions";
+import type { EloShortcutsAPI, ShortcutsData } from "~/elo/interfaces/app/shortcuts";
+import type { EloUpdatesAPI } from "~/elo/interfaces/app/updates";
+import type { EloWindowsAPI } from "~/elo/interfaces/app/windows";
 // API TYPES //
-import { FlowBrowserAPI } from "~/flow/interfaces/browser/browser";
-import { FlowPageAPI } from "~/flow/interfaces/browser/page";
-import { FlowNavigationAPI } from "~/flow/interfaces/browser/navigation";
-import { FlowInterfaceAPI } from "~/flow/interfaces/browser/interface";
-import { FlowProfilesAPI } from "~/flow/interfaces/sessions/profiles";
-import { FlowSpacesAPI } from "~/flow/interfaces/sessions/spaces";
-import { FlowAppAPI } from "~/flow/interfaces/app/app";
-import { FlowIconsAPI } from "~/flow/interfaces/settings/icons";
-import { FlowNewTabAPI } from "~/flow/interfaces/browser/newTab";
-import { FlowOpenExternalAPI } from "~/flow/interfaces/settings/openExternal";
-import { FlowOnboardingAPI } from "~/flow/interfaces/settings/onboarding";
-import { FlowOmniboxAPI } from "~/flow/interfaces/browser/omnibox";
-import { FlowSettingsAPI } from "~/flow/interfaces/settings/settings";
-import { FlowWindowsAPI } from "~/flow/interfaces/app/windows";
-import { FlowExtensionsAPI } from "~/flow/interfaces/app/extensions";
-import { FlowTabsAPI } from "~/flow/interfaces/browser/tabs";
-import { FlowUpdatesAPI } from "~/flow/interfaces/app/updates";
-import { FlowActionsAPI } from "~/flow/interfaces/app/actions";
-import { FlowShortcutsAPI, ShortcutsData } from "~/flow/interfaces/app/shortcuts";
+import type { EloBrowserAPI } from "~/elo/interfaces/browser/browser";
+import type { EloInterfaceAPI } from "~/elo/interfaces/browser/interface";
+import type { EloNavigationAPI } from "~/elo/interfaces/browser/navigation";
+import type { EloNewTabAPI } from "~/elo/interfaces/browser/newTab";
+import type { EloOmniboxAPI } from "~/elo/interfaces/browser/omnibox";
+import type { EloPageAPI } from "~/elo/interfaces/browser/page";
+import type { EloTabsAPI } from "~/elo/interfaces/browser/tabs";
+import type { EloProfilesAPI } from "~/elo/interfaces/sessions/profiles";
+import type { EloSpacesAPI } from "~/elo/interfaces/sessions/spaces";
+import type { EloIconsAPI } from "~/elo/interfaces/settings/icons";
+import type { EloOnboardingAPI } from "~/elo/interfaces/settings/onboarding";
+import type { EloOpenExternalAPI } from "~/elo/interfaces/settings/openExternal";
+import type { EloSettingsAPI } from "~/elo/interfaces/settings/settings";
 
 // API CHECKS //
 function isProtocol(protocol: string) {
@@ -48,10 +48,10 @@ function isLocation(protocol: string, hostname: string) {
 type Permission = "all" | "app" | "browser" | "session" | "settings";
 
 function hasPermission(permission: Permission) {
-  const isFlowProtocol = isProtocol("flow:");
-  const isFlowInternalProtocol = isProtocol("flow-internal:");
+  const isEloProtocol = isProtocol("flow:");
+const isEloInternalProtocol = isProtocol("flow-internal:");
 
-  const isInternalProtocols = isFlowInternalProtocol || isFlowProtocol;
+const isInternalProtocols = isEloInternalProtocol || isEloProtocol;
 
   // Browser UI
   const isMainUI = isLocation("flow-internal:", "main-ui");
@@ -75,7 +75,7 @@ function hasPermission(permission: Permission) {
     case "browser":
       return isBrowserUI || isOmnibox;
     case "session":
-      return isFlowInternalProtocol || isOmnibox || isBrowserUI;
+      return isEloInternalProtocol || isOmnibox || isBrowserUI;
     case "settings":
       return isInternalProtocols;
     default:
@@ -207,7 +207,7 @@ function wrapAPI<T extends object>(
 }
 
 // BROWSER API //
-const browserAPI: FlowBrowserAPI = {
+const browserAPI: EloBrowserAPI = {
   loadProfile: async (profileId: string) => {
     return ipcRenderer.send("browser:load-profile", profileId);
   },
@@ -220,7 +220,7 @@ const browserAPI: FlowBrowserAPI = {
 };
 
 // TABS API //
-const tabsAPI: FlowTabsAPI = {
+const tabsAPI: EloTabsAPI = {
   getData: async () => {
     return ipcRenderer.invoke("tabs:get-data");
   },
@@ -263,14 +263,14 @@ const tabsAPI: FlowTabsAPI = {
 };
 
 // PAGE API //
-const pageAPI: FlowPageAPI = {
+const pageAPI: EloPageAPI = {
   setPageBounds: (bounds: { x: number; y: number; width: number; height: number }) => {
     return ipcRenderer.send("page:set-bounds", bounds);
   }
 };
 
 // NAVIGATION API //
-const navigationAPI: FlowNavigationAPI = {
+const navigationAPI: EloNavigationAPI = {
   getTabNavigationStatus: (tabId: number) => {
     return ipcRenderer.invoke("navigation:get-tab-status", tabId);
   },
@@ -289,7 +289,7 @@ const navigationAPI: FlowNavigationAPI = {
 };
 
 // INTERFACE API //
-const interfaceAPI: FlowInterfaceAPI = {
+const interfaceAPI: EloInterfaceAPI = {
   setWindowButtonPosition: (position: { x: number; y: number }) => {
     return ipcRenderer.send("window-button:set-position", position);
   },
@@ -343,7 +343,7 @@ const interfaceAPI: FlowInterfaceAPI = {
 };
 
 // PROFILES API //
-const profilesAPI: FlowProfilesAPI = {
+const profilesAPI: EloProfilesAPI = {
   getProfiles: async () => {
     return ipcRenderer.invoke("profiles:get-all");
   },
@@ -362,7 +362,7 @@ const profilesAPI: FlowProfilesAPI = {
 };
 
 // SPACES API //
-const spacesAPI: FlowSpacesAPI = {
+const spacesAPI: EloSpacesAPI = {
   getSpaces: async () => {
     return ipcRenderer.invoke("spaces:get-all");
   },
@@ -399,7 +399,7 @@ const spacesAPI: FlowSpacesAPI = {
 };
 
 // APP API //
-const appAPI: FlowAppAPI = {
+const appAPI: EloAppAPI = {
   getAppInfo: async () => {
     const appInfo: {
       version: string;
@@ -436,7 +436,7 @@ const appAPI: FlowAppAPI = {
 };
 
 // ICONS API //
-const iconsAPI: FlowIconsAPI = {
+const iconsAPI: EloIconsAPI = {
   getIcons: async () => {
     return ipcRenderer.invoke("icons:get-all");
   },
@@ -452,14 +452,14 @@ const iconsAPI: FlowIconsAPI = {
 };
 
 // NEW TAB API //
-const newTabAPI: FlowNewTabAPI = {
+const newTabAPI: EloNewTabAPI = {
   open: () => {
     return ipcRenderer.send("new-tab:open");
   }
 };
 
 // OPEN EXTERNAL API //
-const openExternalAPI: FlowOpenExternalAPI = {
+const openExternalAPI: EloOpenExternalAPI = {
   getAlwaysOpenExternal: async () => {
     return ipcRenderer.invoke("open-external:get");
   },
@@ -469,7 +469,7 @@ const openExternalAPI: FlowOpenExternalAPI = {
 };
 
 // ONBOARDING API //
-const onboardingAPI: FlowOnboardingAPI = {
+const onboardingAPI: EloOnboardingAPI = {
   finish: () => {
     return ipcRenderer.send("onboarding:finish");
   },
@@ -479,7 +479,7 @@ const onboardingAPI: FlowOnboardingAPI = {
 };
 
 // OMNIBOX API //
-const omniboxAPI: FlowOmniboxAPI = {
+const omniboxAPI: EloOmniboxAPI = {
   show: (bounds: Electron.Rectangle | null, params: { [key: string]: string } | null) => {
     return ipcRenderer.send("omnibox:show", bounds, params);
   },
@@ -489,7 +489,7 @@ const omniboxAPI: FlowOmniboxAPI = {
 };
 
 // SETTINGS API //
-const settingsAPI: FlowSettingsAPI = {
+const settingsAPI: EloSettingsAPI = {
   getSetting: async (settingId: string) => {
     return ipcRenderer.invoke("settings:get-setting", settingId);
   },
@@ -505,7 +505,7 @@ const settingsAPI: FlowSettingsAPI = {
 };
 
 // WINDOWS API //
-const windowsAPI: FlowWindowsAPI = {
+const windowsAPI: EloWindowsAPI = {
   openSettingsWindow: () => {
     return ipcRenderer.send("settings:open");
   },
@@ -515,7 +515,7 @@ const windowsAPI: FlowWindowsAPI = {
 };
 
 // EXTENSIONS API //
-const extensionsAPI: FlowExtensionsAPI = {
+const extensionsAPI: EloExtensionsAPI = {
   getAllInCurrentProfile: async () => {
     return ipcRenderer.invoke("extensions:get-all-in-current-profile");
   },
@@ -534,7 +534,7 @@ const extensionsAPI: FlowExtensionsAPI = {
 };
 
 // UPDATES API //
-const updatesAPI: FlowUpdatesAPI = {
+const updatesAPI: EloUpdatesAPI = {
   isAutoUpdateSupported: async () => {
     return ipcRenderer.invoke("updates:is-auto-update-supported");
   },
@@ -556,7 +556,7 @@ const updatesAPI: FlowUpdatesAPI = {
 };
 
 // ACTIONS API //
-const actionsAPI: FlowActionsAPI = {
+const actionsAPI: EloActionsAPI = {
   onCopyLink: (callback: () => void) => {
     return listenOnIPCChannel("actions:on-copy-link", callback);
   },
@@ -566,7 +566,7 @@ const actionsAPI: FlowActionsAPI = {
 };
 
 // SHORTCUTS API //
-const shortcutsAPI: FlowShortcutsAPI = {
+const shortcutsAPI: EloShortcutsAPI = {
   getShortcuts: async () => {
     return ipcRenderer.invoke("shortcuts:get-all");
   },

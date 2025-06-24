@@ -6,7 +6,7 @@ export type IconData = {
 };
 
 // API //
-export interface FlowIconsAPI {
+export interface EloIconsAPI {
   /**
    * Gets the icons
    */

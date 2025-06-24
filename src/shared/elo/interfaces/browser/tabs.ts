@@ -1,8 +1,8 @@
-import { IPCListener } from "~/flow/types";
+import { IPCListener } from "~/elo/types";
 import { WindowTabsData } from "~/types/tabs";
 
 // API //
-export interface FlowTabsAPI {
+export interface EloTabsAPI {
   /**
    * Get the data for all tabs
    * @returns The data for all tabs

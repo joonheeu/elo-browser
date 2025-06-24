@@ -1,5 +1,5 @@
 // API //
-export interface FlowOnboardingAPI {
+export interface EloOnboardingAPI {
   /**
    * Finishes the onboarding process
    */

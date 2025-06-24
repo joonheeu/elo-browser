@@ -1,3 +1,4 @@
+import path from "path";
 import { AllowedDomains, serveStaticFile } from "@/browser/utility/protocols/utils";
 import { browser } from "@/index";
 import { getExtensionIcon } from "@/modules/extensions/management";
@@ -6,7 +7,6 @@ import { normalizeURL } from "@/modules/favicons";
 import { PATHS } from "@/modules/paths";
 import { getContentType } from "@/modules/utils";
 import { Protocol } from "electron";
-import path from "path";
 import fsPromises from "fs/promises";
 
 const FLOW_PROTOCOL_ALLOWED_DOMAINS: AllowedDomains = {
@@ -33,7 +33,7 @@ function removePdfResponseFromCache(key: string) {
   PDF_CACHE.delete(key);
 }
 
-export function registerFlowProtocol(protocol: Protocol) {
+export function registerEloProtocol(protocol: Protocol) {
   const handleDomainRequest = async (request: Request, url: URL) => {
     const hostname = url.hostname;
     const pathname = url.pathname;

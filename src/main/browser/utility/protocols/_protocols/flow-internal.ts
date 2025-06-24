@@ -25,7 +25,7 @@ setInterval(() => {
   }
 }, 1000);
 
-export function registerFlowInternalProtocol(protocol: Protocol) {
+export function registerEloInternalProtocol(protocol: Protocol) {
   const handleActiveFaviconRequest = async (_request: Request, url: URL) => {
     // Get the tab ID
     const tabId = url.searchParams.get("tabId");

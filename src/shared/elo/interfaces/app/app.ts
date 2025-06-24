@@ -1,5 +1,5 @@
 // API //
-export interface FlowAppAPI {
+export interface EloAppAPI {
   /**
    * Gets the app info
    */

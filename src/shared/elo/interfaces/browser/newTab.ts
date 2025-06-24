@@ -1,7 +1,7 @@
 export type NewTabMode = "omnibox" | "tab";
 
 // API //
-export interface FlowNewTabAPI {
+export interface EloNewTabAPI {
   /**
    * Opens a new tab
    */

@@ -1,10 +1,10 @@
-import { IPCListener } from "~/flow/types";
+import { IPCListener } from "~/elo/types";
 import { ShortcutAction } from "~/types/shortcuts";
 
 export type ShortcutsData = ShortcutAction[];
 
 // API //
-export interface FlowShortcutsAPI {
+export interface EloShortcutsAPI {
   /**
    * Get all shortcuts
    */

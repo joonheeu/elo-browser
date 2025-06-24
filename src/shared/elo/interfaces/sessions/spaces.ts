@@ -1,4 +1,4 @@
-import { IPCListener } from "~/flow/types";
+import { IPCListener } from "~/elo/types";
 
 export type Space = {
   id: string;
@@ -10,7 +10,7 @@ export type Space = {
 };
 
 // API //
-export interface FlowSpacesAPI {
+export interface EloSpacesAPI {
   /**
    * Gets the spaces
    */

@@ -1,7 +1,7 @@
-import { registerFlowProtocol } from "@/browser/utility/protocols/_protocols/flow";
-import { registerFlowExternalProtocol } from "@/browser/utility/protocols/_protocols/flow-external";
+import { registerEloProtocol } from "@/browser/utility/protocols/_protocols/flow";
+import { registerEloExternalProtocol } from "@/browser/utility/protocols/_protocols/flow-external";
 import { PATHS } from "@/modules/paths";
-import { protocol, Session } from "electron";
+import { Session, protocol } from "electron";
 
 protocol.registerSchemesAsPrivileged([
   {
@@ -20,8 +20,8 @@ protocol.registerSchemesAsPrivileged([
 
 export function registerProtocolsWithSession(session: Session) {
   const protocol = session.protocol;
-  registerFlowProtocol(protocol);
-  registerFlowExternalProtocol(protocol);
+  registerEloProtocol(protocol);
+  registerEloExternalProtocol(protocol);
 }
 
 export function registerPreloadScript(session: Session) {

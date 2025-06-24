@@ -1,8 +1,8 @@
-import { IPCListener } from "~/flow/types";
+import { IPCListener } from "~/elo/types";
 import { SharedExtensionData } from "~/types/extensions";
 
 // API //
-export interface FlowExtensionsAPI {
+export interface EloExtensionsAPI {
   /**
    * Get all extensions in the current profile
    */

@@ -1,7 +1,7 @@
-import { IPCListener } from "~/flow/types";
+import { IPCListener } from "~/elo/types";
 
 // API //
-export interface FlowActionsAPI {
+export interface EloActionsAPI {
   /**
    * Listen for copy link action
    */

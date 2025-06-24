@@ -1,5 +1,5 @@
 // API //
-export interface FlowBrowserAPI {
+export interface EloBrowserAPI {
   /**
    * Loads a profile
    * @param profileId The id of the profile to load

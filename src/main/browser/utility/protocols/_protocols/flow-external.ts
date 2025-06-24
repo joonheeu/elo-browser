@@ -12,7 +12,7 @@ const FLOW_EXTERNAL_ALLOWED_DOMAINS: AllowedDomains = {
   "v2.surf.edge.game": "edge-surf-game-v2"
 };
 
-export function registerFlowExternalProtocol(protocol: Protocol) {
+export function registerEloExternalProtocol(protocol: Protocol) {
   const handleDomainRequest = async (request: Request, url: URL) => {
     const hostname = url.hostname;
     const pathname = url.pathname;

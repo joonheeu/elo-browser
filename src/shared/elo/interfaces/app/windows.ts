@@ -1,5 +1,5 @@
 // API //
-export interface FlowWindowsAPI {
+export interface EloWindowsAPI {
   /**
    * Opens the settings window
    */

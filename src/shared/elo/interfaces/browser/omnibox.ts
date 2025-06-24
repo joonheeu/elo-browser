@@ -1,9 +1,9 @@
-import { PageBounds } from "~/flow/types";
+import { PageBounds } from "~/elo/types";
 
 type QueryParams = { [key: string]: string };
 
 // API //
-export interface FlowOmniboxAPI {
+export interface EloOmniboxAPI {
   /**
    * Shows the omnibox
    */

@@ -1,7 +1,7 @@
-import { PageBounds } from "~/flow/types";
+import { PageBounds } from "~/elo/types";
 
 // API //
-export interface FlowPageAPI {
+export interface EloPageAPI {
   /**
    * Sets the bounds of the page content
    * Similar to setTabBounds but specifically for the page content area

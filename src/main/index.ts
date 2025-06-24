@@ -12,6 +12,9 @@ import "@/modules/content-blocker";
 import { debugPrint } from "@/modules/output";
 import { setupQuitHandler } from "@/modules/quit-handlers";
 
+// Set app name for process identification
+app.setName("Elo");
+
 export let browser: Browser | null = null;
 
 function sleep(ms: number) {

@@ -13,7 +13,7 @@ export type TabNavigationStatus = {
 };
 
 // API //
-export interface FlowNavigationAPI {
+export interface EloNavigationAPI {
   /**
    * Gets the navigation status of a tab
    * This can only be called from the Browser UI
