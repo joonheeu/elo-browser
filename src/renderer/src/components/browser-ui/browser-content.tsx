@@ -1,6 +1,6 @@
 import { memo, useRef, useEffect } from "react";
 import { motion, AnimatePresence } from "motion/react";
-import { PageBounds } from "~/flow/types";
+import { PageBounds } from "~/elo/types";
 import { cn } from "@/lib/utils";
 import { useBoundingRect } from "@/hooks/use-bounding-rect";
 

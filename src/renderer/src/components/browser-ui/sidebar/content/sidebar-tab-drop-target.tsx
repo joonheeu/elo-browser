@@ -1,7 +1,7 @@
 import { TabGroupSourceData } from "@/components/browser-ui/sidebar/content/sidebar-tab-groups";
 import { DropIndicator } from "@/components/browser-ui/sidebar/content/space-sidebar";
 import { useEffect, useRef, useState } from "react";
-import { Space } from "~/flow/interfaces/sessions/spaces";
+import { Space } from "~/elo/interfaces/sessions/spaces";
 import {
   dropTargetForElements,
   ElementDropTargetEventBasePayload

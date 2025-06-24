@@ -1,5 +1,5 @@
 import { SidebarMenuItem, SidebarMenuButton } from "@/components/ui/resizable-sidebar";
-import { Space } from "~/flow/interfaces/sessions/spaces";
+import { Space } from "~/elo/interfaces/sessions/spaces";
 import { cn } from "@/lib/utils";
 import { useSpaces } from "@/components/providers/spaces-provider";
 import { SIDEBAR_HOVER_COLOR, SIDEBAR_HOVER_COLOR_PLAIN } from "@/components/browser-ui/browser-sidebar";
